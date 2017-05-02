@@ -4,6 +4,7 @@ use union_find::UnionFind;
 
 
 #[test]
+#[ignore]
 fn union_find() {
     let mut uf = UnionFind::new(36);
 
@@ -14,11 +15,7 @@ fn union_find() {
 }
 
 
-
+// #[test]
+// fn dequeue() {
 //
-//
-// mod tests {
-//     #[test]
-//     fn it_works() {
-//     }
 // }
