@@ -10,14 +10,28 @@
 //    public static void main(String[] args)   // unit testing (optional)
 // }
 
-pub struct Deque<T> {
-
+struct Item<T> {
+    item: T,
+    next: *mut Item<T>,
 }
 
-impl Deque<T> {
-    pub fn new(&self) {
+pub struct Deque<T> {
+  n: u32,
+  start: Item<T>,
+  // moo: T,
+}
 
+impl <T> Deque<T> {
+  pub fn new(&self) -> Deque<T> {
+    Deque<T> {
+        n: 0,
+        // moo: T,
     }
+  }
+
+  pub fn addFirst(&self, item: T) {
+
+  }
 
     // pub fn isEmpty(&self) -> bool {
     //
@@ -44,4 +58,12 @@ impl Deque<T> {
     // }
 
     // Iterator TODO
+}
+
+
+
+#[test]
+fn test_dequeue_new() {
+    println!("{:?}", "testing new dequeue");
+    // let x = Deque { n: 3 };
 }

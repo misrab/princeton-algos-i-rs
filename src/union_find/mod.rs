@@ -103,3 +103,17 @@ impl UnionFind {
 pub fn union() {
     println!("called `my::function()`");
 }
+
+
+
+
+#[test]
+#[ignore]
+fn union_find() {
+    let mut uf = UnionFind::new(36);
+
+    assert!(uf.connected(1,2) == false);
+
+    uf.union(1,2);
+    assert!(uf.connected(1,2) == true);
+}
