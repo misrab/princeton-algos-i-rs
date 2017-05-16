@@ -14,7 +14,7 @@ pub struct UnionFind {
 }
 
 impl UnionFind {
-    pub fn new(n: i32) -> UnionFind {
+    pub fn new(n: i32) -> Self {
         let mut parents: Vec<i32> = Vec::with_capacity(n as usize);
         let mut sizes: Vec<i32> = Vec::with_capacity(n as usize);
 
