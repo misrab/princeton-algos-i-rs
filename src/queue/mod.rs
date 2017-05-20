@@ -1,89 +1,72 @@
-/*
-    Queue implementation with doubly linked list
-*/
 
-use std::rc::Rc;
-use std::marker::PhantomData;
-
-
-// implementing a queue using a linked list just to practice
-struct Node<T> {
-    item: T,
-    next: Link<T>,
-    prev: Link<T>,
-}
-
-pub struct Queue<'a, T: 'a> {
+pub struct Queue<T> {
     head: Link<T>,
-    tail: Link<T>,
-
-    phantom: PhantomData<&'a T>,
 }
 
-type Link<T> = Option<Rc<Node<T>>>;
+type Link<T> = Option<Box<Node<T>>>;
+
+struct Node<T> {
+    elem: T,
+    next: Link<T>,
+}
 
 
-impl <'a, T> Queue<'a, T> {
-    fn new() -> Self {
-        Queue {
-            head: None,
-            tail: None,
 
-            phantom: PhantomData,
-        }
+impl<T> Queue<T> {
+    pub fn new() -> Self {
+        Queue { head: None }
     }
 
-    fn add(&mut self, el: T) {
-        let item = Rc::new(Node {
-            item: el,
+    pub fn enque(&mut self, elem: T) {
+        let new_node = Box::new(Node {
+            elem: elem,
             next: self.head.take(),
         });
 
-        // for use in head later
-        let _y = item.clone();
-
-        // if list was empty, point last to this element
-        match self.tail {
-            None =>  { self.tail = Some(_y); },
-            Some(_) => {},
-        }
-
-        self.head = Some(item);
+        self.head = Some(new_node);
     }
 
-    // remove the last element
-    fn remove(&mut self) -> Option<T> {
-        // match self.head {
-        //     None => { return None; },
-        //     Some(_) => {},
-        // }
-        //
-        // match self.tail.take() {
-        //     None => {},
-        //     Some(last) => {
-        //         match last.next {
-        //             // it was the last element
-        //             None => {
-        //                 self.tail = None;
-        //
-        //             },
-        //             Some(_) => {
-        //
-        //             },
-        //         }
-        //     }
-        // }
+    pub fn deque(&mut self) -> Option<T> {
+        // self.head.take().map(|node| {
+        //     let node = *node;
+        //     self.head = node.next;
+        //     node.elem
+        // })
 
+        let mut cur_link: Link<T> = self.head.take();
+        while let Some(mut boxed_node) = cur_link {
+            cur_link = boxed_node.next.take();
+            // match boxed_node.next {
+            //     None => {},
+            //     Some(x) => {
+            //         cur_link = boxed_node.next.take();
+            //     },
+            // }
+        }
 
-        unimplemented!();
+        cur_link
+    }
+}
+
+impl<T> Drop for Queue<T> {
+    fn drop(&mut self) {
+        let mut cur_link = self.head.take();
+        while let Some(mut boxed_node) = cur_link {
+            cur_link = boxed_node.next.take();
+        }
     }
 }
 
 
-
 #[test]
-fn test_new() {
+fn test_stack() {
     println!("testing queue");
 
-    let q: Queue<u32> = Queue::new();
+    let mut queue: Queue<i32> = Queue::new();
+    queue.enque(1);
+    queue.enque(2);
+    queue.enque(3);
+    assert!(queue.deque().unwrap() == 1);
+    assert!(queue.deque().unwrap() == 2);
+    assert!(queue.deque().unwrap() == 3);
 }
