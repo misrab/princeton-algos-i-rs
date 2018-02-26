@@ -1,5 +1,6 @@
-# princeton-algos-i-rs
-following Coursera's Princeton Algorithms I class, using Rust
+# stanford-algos-rs
+
+following Coursera's Stanford Algorithms class. I actually did this in person!! But felt....RUSTY
 
 ## description
 
