@@ -4,3 +4,5 @@ version = "0.1.0"
 authors = ["Misrab M. Faizullah-Khan <faizullah.misrab@gmail.com>"]
 
 [dependencies]
+bigint = "4"
+num-bigint = "0.1"

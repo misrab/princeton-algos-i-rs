@@ -15,98 +15,27 @@
 */
 
 
-
+extern crate num_bigint;
 
 use std::cmp;
-
-
-fn slice_to_int(x: &[u64]) -> u64 {
-  let mut result: u64 = 0;
-
-  let n = x.len();
-
-  for power in 0..n {
-    result += x[power] * 10u64.pow(n as u32 - 1 - power as u32);
-  }
-
-  result
-}
-
-
-fn int_to_vec(num: u64) -> Vec<u64> {
-  num.to_string().chars().map(|d| d.to_digit(10).unwrap() as u64).collect()
-}
-
-
-
-// helper function to play around with manually
-// in code without reading from command line
-fn string_to_vec(s: &str) -> Vec<u64> {
-  s.chars().map(|d| d.to_digit(10).unwrap() as u64).collect()
-}
-
-
-// recursive Karatsuba multiplication
-// takes vectors of only positive digits
-// we use immutable read-only slices
-// we return a new vector with results
-// assumes |x| = |y|
-fn multiply(x: &[u64], y: &[u64]) -> u64 {
-
-  let n = x.len();
-
-  let n32: u32 = x.len() as u32;
-  //let n_y = y.len();
-
-
-  //println!("multiplying {:?} and {:?}", x, y);
-
-  // base case
-  // second condition is where we're adding in step 3 below
-  // and thus lengths may not match
-  if n32 == 1 || x.len() != y.len() {
-    return slice_to_int(x)*slice_to_int(y);
-  }
-
-
-
-  let a = &x[0..n/2];
-  let b = &x[n/2..n];
-  let c = &y[0..n/2];
-  let d = &y[n/2..n];
-
-
-  let ac = multiply(a, c);
-
-  let bd = multiply(b, d);
-
-
-  let step3 = multiply(&int_to_vec(slice_to_int(a)+slice_to_int(b)), &int_to_vec(slice_to_int(c)+slice_to_int(d)));
-
-
-  println!("doing {:?} minus {:?} minus {:?}", step3, bd, ac);
-
-  let ad_plus_bc = step3 - bd - ac;
-
-
-
-  10u64.pow(n32) * ac + 10u64.pow(n32/2) * ad_plus_bc + bd
-
-
-}
+//use self::bigint::BigUint;
+use self::num_bigint::{BigUint,ToBigInt};
 
 
 
 // trying out a string version instead
-fn multiply_string(x: &str, y: &str) -> u64 {
+fn multiply_string(x: &str, y: &str) -> BigUint {
   let n_x = x.len();
   let n_y = y.len();
   let n = cmp::max(n_x, n_y);
   let n2 = n/2; // ! this should be a floor
 
+  //println!("multiplying {} and {}", x, y);
+
 
   // base case
   if n_x == 1 || n_y == 1 {
+    //println!("Returning base case {:?} * {:?} = {:?}", x, y, parse_int(x)*parse_int(y));
     return parse_int(x) * parse_int(y);
   }
 
@@ -119,13 +48,11 @@ fn multiply_string(x: &str, y: &str) -> u64 {
   let a_plus_b = parse_int(a) + parse_int(b);
   let c_plus_d = parse_int(c) + parse_int(d);
 
-  //let a_plus_b_string = a_plus_b.to_string();
-  //let c_plus_d
-
-
   let ac = multiply_string(a, c);
   let step3 = multiply_string(&a_plus_b.to_string(), &c_plus_d.to_string());
   let bd = multiply_string(b, d);
+
+  //println!("doing {:?} - {:?} - {:?}, for x {:?} and y {:?}", step3, ac, bd, x, y);
 
   let ad_plus_bc = step3 - ac - bd;
 
@@ -146,11 +73,28 @@ fn add_trailing_zeros(string: &str, numzeros: u64) -> String {
   owned_string
 }
 
-fn parse_int(input: &str) -> u64 {
-  input.chars()
-    .find(|a| a.is_digit(10))
-    .and_then(|a| a.to_digit(10))
-    .unwrap() as u64
+fn parse_int(input: &str) -> BigUint {
+  //input.parse::<BigUint>().unwrap()
+  /*let i = match input.parse::<BigUint>() {
+    Ok(i) => i,
+    Err(e) => {
+      println!("error parsing {:?}: {:?}", input, e);
+      0
+    }
+  };
+
+  i*/
+
+  //BigUint::from_dec_str(input).unwrap()
+  BigUint::parse_bytes(input.as_bytes(), 10).unwrap()
+
+}
+
+
+#[test]
+fn test_parse_int() {
+  assert_eq!(parse_int("11"), ToBigInt::to_bigint(&11).unwrap());
+  //assert_eq!(parse_int("3"), BigUint::from(3));
 }
 
 #[test]
@@ -167,39 +111,19 @@ fn test_karatsuba_string() {
   let y = "1234";
   let result = multiply_string(x, y);
   assert_eq!(result, 7006652, "{:?} times {:?} equals {:?}.", x, y, result);
+
+
+  let p = "3141592653589";//79323846264338";//3279502884197169399375105820974944592";
+  let q = "2718281828459";//04523536028747";//1352662497757247093699959574966967627";
+  let pqresult = multiply_string(p,q);
+  println!("{:?}", pqresult);
+
+
+
 }
 
 
-#[test]
-#[ignore]
-fn test_karatsuba() {
-  println!("testing karatsuba!");
-
-
-
-
-  let x = &[5,6,7,8];
-  let y = &[1,2,3,4];
-  let result = multiply(x, y);
-
-  // answer should be 7006652;
-  assert_eq!(result, 7006652, "{:?} times {:?} equals {:?}.", x, y, result);
-
-  return;
-
-  //let p_str = "3141592653589793238462643383279502884197169399375105820974944592";
-  //let q_str = "2718281828459045235360287471352662497757247093699959574966967627";
-  let p_str = "3141592653589";//79323846264338";//3279502884197169399375105820974944592";
-  let q_str = "2718281828459";//04523536028747";//1352662497757247093699959574966967627";
-  let p = &string_to_vec(p_str);
-  let q = &string_to_vec(q_str);
-
-
-
-  let pqresult = multiply(p,q);
-  println!("pqresult {:?}", pqresult);
-}
-
+/*
 #[test]
 fn test_int_to_vec() {
   let slice = &vec![3,4,5];
@@ -234,4 +158,4 @@ fn test_slice_to_int() {
 
 
 }
-
+*/
