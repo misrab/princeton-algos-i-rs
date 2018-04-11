@@ -1,0 +1,40 @@
+
+
+
+
+
+
+
+
+
+
+
+fn count_brute_inversions(arr: &[u64]) -> u64 {
+  let n = arr.len();
+
+  let mut count = 0;
+  for i in 0..n {
+    for j in 0..(n-i) {
+      count++;
+    }
+  }
+
+  count
+}
+
+
+
+
+
+
+#[test]
+fn test_basic() {
+  println!("testing counting inversions");
+
+  let arr = vec![3,6,5,1];
+
+  let brute = count_brute_inversions(&arr);
+  assert_eq!(brute, 5, "array {:?} has {:?} inversions", arr, brute);
+
+
+}

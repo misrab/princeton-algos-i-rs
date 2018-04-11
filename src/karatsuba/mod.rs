@@ -14,7 +14,7 @@
  *    - I suspect more efficient ways of dealing with digits and slice conversions
 */
 
-
+/*
 extern crate num_bigint;
 
 use std::cmp;
@@ -90,14 +90,16 @@ fn parse_int(input: &str) -> BigUint {
 
 }
 
-
+/*
 #[test]
+#[ignore]
 fn test_parse_int() {
   assert_eq!(parse_int("11"), ToBigInt::to_bigint(&11).unwrap());
   //assert_eq!(parse_int("3"), BigUint::from(3));
 }
 
 #[test]
+#[ignore]
 fn test_add_trailing_zeros() {
   let x = "101";
   let x_big = &add_trailing_zeros(x, 3);
@@ -106,6 +108,7 @@ fn test_add_trailing_zeros() {
 
 
 #[test]
+#[ignore]
 fn test_karatsuba_string() {
   let x = "5678";
   let y = "1234";
@@ -121,7 +124,7 @@ fn test_karatsuba_string() {
 
 
 }
-
+*/
 
 /*
 #[test]
@@ -158,4 +161,4 @@ fn test_slice_to_int() {
 
 
 }
-*/
+*/*/

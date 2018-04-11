@@ -1,5 +1,8 @@
 pub mod karatsuba;
 
+
+pub mod counting_inversions;
+
 //pub mod union_find;
 
 
