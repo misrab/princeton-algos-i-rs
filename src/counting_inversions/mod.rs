@@ -27,27 +27,52 @@ fn count_brute_inversions(arr: &[u64]) -> u64 {
 
 fn sort_and_count_inversions(arr: &[u64]) -> (Vec<u64>, u64) {
   let n = arr.len();
-  println!("arry length {:} for {:?}", n, arr);
+  //println!("arry length {:} for {:?}", n, arr);
 
 
   if n <= 1 { return (arr.to_vec(), 0); }
 
-  let mid = (n as f64 * 0.5).ceil() as usize;
+  let mid = n/2; //(n as f64 / 2).floor() as usize;
+  //println!("splitting at index {:?} out of {:?}", mid, n);
 
-  let (B, x) = sort_and_count_inversions(&arr[0..mid]);
-  let (C, y) = sort_and_count_inversions(&arr[mid..n-1]);
 
-  let z = count_split_inversions(&arr);
+  let (left_sorted, x) = sort_and_count_inversions(&arr[0..mid]);
+  let (right_sorted, y) = sort_and_count_inversions(&arr[mid..n]);
 
-  let mut sorted = arr.to_vec();
-  sorted.sort();
+  let (full_sorted, z) = count_split_inversions(&left_sorted, &right_sorted);
 
-  (sorted, x + y)
+  //let mut sorted = arr.to_vec();
+  //sorted.sort();
+
+  (full_sorted, x + y + z)
 }
 
 
-fn count_split_inversions(arr: &[u64]) -> u64 {
-  0
+fn count_split_inversions(left: &[u64], right: &[u64]) -> (Vec<u64>, u64) {
+  let n = left.len();
+
+  let mut count = 0;
+  let mut left_index = 0;
+  let mut right_index = 0;
+
+  let mut full_sorted = Vec::new();
+
+  while left_index < n && right_index < n {
+    if left[left_index] < right[right_index] {
+      full_sorted.push(left[left_index]);
+      left_index += 1;
+      continue;
+    }
+
+    // we have an inversion, and so all remaining elements
+    // in the left will also be inversions
+    full_sorted.push(right[right_index]);
+    right_index += 1;
+    count += n as u64 - left_index as u64 + 1;
+  }
+
+
+  (full_sorted, count)
 }
 
 
