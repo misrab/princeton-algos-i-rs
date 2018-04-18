@@ -9,7 +9,7 @@
 
 
 
-fn count_brute_inversions(arr: &[u64]) -> u64 {
+pub fn count_brute_inversions(arr: &[u64]) -> u64 {
   let n = arr.len();
 
   let mut count = 0;
@@ -25,7 +25,7 @@ fn count_brute_inversions(arr: &[u64]) -> u64 {
 
 //use std::cmp::max;
 
-fn sort_and_count_inversions(arr: &[u64]) -> (Vec<u64>, u64) {
+pub fn sort_and_count_inversions(arr: &[u64]) -> (Vec<u64>, u64) {
   let n = arr.len();
   //println!("arry length {:} for {:?}", n, arr);
 
