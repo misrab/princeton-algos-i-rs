@@ -30,7 +30,7 @@ fn sort_and_count_inversions(arr: &[u64]) -> (Vec<u64>, u64) {
   //println!("arry length {:} for {:?}", n, arr);
 
 
-  if n <= 1 { return (arr.to_vec(), 0); }
+  if n == 1  { return (arr.to_vec(), 0); }
 
   let mid = n/2; //(n as f64 / 2).floor() as usize;
   //println!("splitting at index {:?} out of {:?}", mid, n);
@@ -49,7 +49,8 @@ fn sort_and_count_inversions(arr: &[u64]) -> (Vec<u64>, u64) {
 
 
 fn count_split_inversions(left: &[u64], right: &[u64]) -> (Vec<u64>, u64) {
-  let n = left.len();
+  let n_left = left.len();
+  let n_right = right.len();
 
   let mut count = 0;
   let mut left_index = 0;
@@ -57,7 +58,21 @@ fn count_split_inversions(left: &[u64], right: &[u64]) -> (Vec<u64>, u64) {
 
   let mut full_sorted = Vec::new();
 
-  while left_index < n && right_index < n {
+  while left_index < n_left || right_index < n_right {
+    // TOIMPROVE
+    // these first two closing cases are unelegant
+    if left_index >= n_left {
+      full_sorted.push(right[right_index]);
+      right_index += 1;
+      continue;
+    }
+    if right_index >= n_right {
+      full_sorted.push(left[left_index]);
+      left_index += 1;
+      continue;
+    }
+
+
     if left[left_index] < right[right_index] {
       full_sorted.push(left[left_index]);
       left_index += 1;
@@ -68,9 +83,12 @@ fn count_split_inversions(left: &[u64], right: &[u64]) -> (Vec<u64>, u64) {
     // in the left will also be inversions
     full_sorted.push(right[right_index]);
     right_index += 1;
-    count += n as u64 - left_index as u64 + 1;
+    count += n_left as u64 - left_index as u64;
   }
 
+
+  //println!("found {:?} inversions across {:?} and {:?}", count, left, right);
+  //println!("full sorted version is {:?}", full_sorted);
 
   (full_sorted, count)
 }
@@ -86,6 +104,26 @@ fn test_brute() {
   assert_eq!(brute, 4, "array {:?} has {:?} inversions", arr, brute);
 }
 
+#[test]
+fn test_split() {
+  println!("testing split inversions");
+
+  let left = vec![11,22,32,4324];
+  let right = vec![21, 563, 987, 2321];
+
+  let (full_split, split) = count_split_inversions(&left, &right);
+  let full = [&left[..], &right[..]].concat();
+
+  let mut full_sorted = full[..].to_vec();
+  full_sorted.sort();
+
+  // check sorting works
+  assert_eq!(full_split, full_sorted, "manually sorted version {:?}", full_split);
+
+  // chech counting works
+  let brute = count_brute_inversions(&full);
+  assert_eq!(split, brute, "split counted {:?} inversions, brute counted {:?}", split, brute);
+}
 
 #[test]
 fn test_efficient() {
