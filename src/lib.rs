@@ -3,6 +3,9 @@ pub mod karatsuba;
 
 pub mod counting_inversions;
 
+pub mod quicksort;
+
+
 //pub mod union_find;
 
 
@@ -38,6 +41,15 @@ fn read_file_to_vec(path: &str) -> Vec<u64> {
 
 
 // use this to run programming assignments
+#[test]
+#[ignore]
+fn test_quicksort() {
+  let vec = read_file_to_vec("/home/misrab/code/src/github.com/misrab/stanford-algos-rs/data/quicksort.txt");
+
+
+}
+
+
 #[test]
 #[ignore]
 fn test_split_inversions() {

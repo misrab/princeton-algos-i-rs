@@ -95,6 +95,7 @@ fn count_split_inversions(left: &[u64], right: &[u64]) -> (Vec<u64>, u64) {
 
 
 #[test]
+#[ignore]
 fn test_brute() {
   println!("testing counting inversions");
 
@@ -105,6 +106,7 @@ fn test_brute() {
 }
 
 #[test]
+#[ignore]
 fn test_split() {
   println!("testing split inversions");
 
@@ -126,6 +128,7 @@ fn test_split() {
 }
 
 #[test]
+#[ignore]
 fn test_efficient() {
   let arr = vec![32,4324,11,22,3454,21,563,987,5634,2321];
 
