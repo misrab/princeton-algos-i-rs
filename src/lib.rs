@@ -44,9 +44,12 @@ fn read_file_to_vec(path: &str) -> Vec<u64> {
 #[test]
 #[ignore]
 fn test_quicksort() {
-  let vec = read_file_to_vec("/home/misrab/code/src/github.com/misrab/stanford-algos-rs/data/quicksort.txt");
+  let mut vec = read_file_to_vec("/home/misrab/code/src/github.com/misrab/stanford-algos-rs/data/quicksort.txt");
 
+  let n = vec.len();
+  quicksort::quicksort(&mut vec, 0, n, &quicksort::PivotMethod::First);
 
+  println!("{:?}", vec);
 }
 
 
