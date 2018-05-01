@@ -1,20 +1,16 @@
 pub mod karatsuba;
 
-
 pub mod counting_inversions;
 
 pub mod quicksort;
 
+pub mod mincut;
+
 
 //pub mod union_find;
-
-
 //mod stack;
-
-// pub mod queue;
-// pub mod dequeue;
-//
-//
+//pub mod queue;
+//pub mod dequeue;
 
 
 
@@ -36,6 +32,13 @@ fn read_file_to_vec(path: &str) -> Vec<u64> {
   }
 
   result
+}
+
+
+#[test]
+#[ignore]
+fn test_mincut() {
+  let path = "/home/misrab/code/src/github.com/misrab/stanford-algos-rs/data/kargerMinCut.txt";
 }
 
 
