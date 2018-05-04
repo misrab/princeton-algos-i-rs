@@ -1,6 +1,8 @@
 use std::collections::HashMap;
 
 
+// think I should've used a heap here
+
 
 struct Vertex<'a> {
   id: u64,
@@ -13,7 +15,7 @@ struct Edge<'a> {
 }
 
 struct AdjacencyList<'a> {
-  vertices: HashMap<u64, Vertex<'a>>, //Vec<Vertex<'a>>,
+  vertices: HashMap<u64, &'a Vertex<'a>>, //Vec<Vertex<'a>>,
   edges: Vec<Edge<'a>>,
 }
 
@@ -32,15 +34,17 @@ impl<'a> AdjacencyList<'a> {
   }
 
 
-  pub fn insert_node(&mut self, id: u64) {
-    if self.vertices.contains_key(&id) { return; }
+  pub fn insert_node(&mut self, id: u64) -> &Vertex {
+    if self.vertices.contains_key(&id) { return &self.vertices[&id]; }
 
-    let vertex = Vertex {
+    let vertex = Vertex{
       id: id,
       edges: Vec::new(),
     };
 
-    self.vertices.insert(id, vertex);
+    self.vertices.insert(id, &vertex);
+
+    &vertex
   }
 
   // takes a vector where the first item is the node id
@@ -51,12 +55,22 @@ impl<'a> AdjacencyList<'a> {
 
     if n == 0 { return; }
 
-    let node = list[0];
+    let node = Vertex{
+        id: list[0],
+        edges: Vec::new(),
+    };
+
     let connections: Vec<Edge> = Vec::new();
 
     for i in 1..n {
       // if the node is not in the graph, add it
-      self.insert_node(list[i]);
+      let second = self.insert_node(list[i]);
+
+      // add the edge to this node's list
+      let edge = Edge{
+        first: &node,
+        second: &second,
+      };
     }
 
     // add note
