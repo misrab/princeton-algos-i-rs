@@ -28,6 +28,9 @@ type graph struct {
 }
 
 type Graph interface {
+	GetNodes() map[uint64]*Vertex
+	GetEdges() []*Edge
+
 	//insertNode(id uint64)
 
 	insertNodeAdjacency(id uint64, connections []uint64)
@@ -45,6 +48,13 @@ func NewGraph() Graph {
 	graph.edges = make([]*Edge, 0)
 
 	return graph
+}
+
+func (g *graph) GetNodes() map[uint64]*Vertex {
+	return g.vertices
+}
+func (g *graph) GetEdges() []*Edge {
+	return g.edges
 }
 
 func (g *graph) GetNode(id uint64) (*Vertex, bool) {
