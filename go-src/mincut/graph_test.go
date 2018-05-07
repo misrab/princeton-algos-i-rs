@@ -20,15 +20,19 @@ func TestNewGraph(t *testing.T) {
 	// insert nodes
 	graph.insertNodeAdjacency(1, []uint64{2, 3, 4, 5})
 
-	for _, node := range graph.GetNodes() {
-		log.Printf("%v\n", node)
-	}
+	log.Printf("%v\n", graph)
+	edge := graph.GetEdges()[0]
+	log.Printf("contracting %v\n", edge)
+	graph.ContractEdge(edge)
+	log.Printf("%v\n", graph)
 
 }
 
 // read an adjacency list into a graph
 func TestReadAdjacencyList(t *testing.T) {
-	graph, err := graphFromFile()
+	t.Skip("skipping from file")
+
+	_, err := graphFromFile()
 	if err != nil {
 		log.Fatal(err)
 	}
