@@ -2,6 +2,9 @@ package graph
 
 import (
 	"fmt"
+	"time"
+
+	"math/rand"
 )
 
 type Vertex struct {
@@ -24,6 +27,10 @@ func (e *Edge) String() string {
 
 func (g *graph) String() string {
 	result := ""
+
+	//result += fmt.Sprintf("vertices: %v\n", g.vertices)
+	//result += fmt.Sprintf("edges: %v\n", g.edges)
+
 	for _, node := range g.GetNodes() {
 		result += fmt.Sprintf("%v\n", node)
 	}
@@ -38,6 +45,8 @@ type graph struct {
 
 type Graph interface {
 	String() string
+	NumNodes() uint64
+	NumEdges() uint64
 
 	GetNodes() map[uint64]*Vertex
 	GetEdges() []*Edge
@@ -53,6 +62,8 @@ type Graph interface {
 	ContractEdge(e *Edge)
 
 	RemoveNode(id uint64)
+
+	ContractionAlgorithm() uint64
 }
 
 func NewGraph() Graph {
@@ -63,6 +74,32 @@ func NewGraph() Graph {
 	graph.edges = make([]*Edge, 0)
 
 	return graph
+}
+
+func (g *graph) NumNodes() uint64 {
+	return uint64(len(g.vertices))
+}
+func (g *graph) NumEdges() uint64 {
+	return uint64(len(g.edges))
+}
+
+func (g *graph) ContractionAlgorithm() uint64 {
+	rand.Seed(time.Now().Unix())
+
+	fmt.Printf("graph starting as %v\n", g)
+
+	for g.NumNodes() > 2 {
+		num_edges := len(g.edges)
+		println(num_edges)
+
+		// choose an edge at random
+		edge := g.edges[rand.Intn(num_edges)]
+		fmt.Printf("contracting %v\n", edge)
+		g.ContractEdge(edge)
+		fmt.Printf("graph is now: %v\n", g)
+	}
+
+	return uint64(len(g.edges))
 }
 
 // remove all edges pointing to a node, then remove the node from the graph
@@ -125,6 +162,7 @@ func (g *graph) ContractEdge(e *Edge) {
 
 	// remove self loops on "from"
 	from.connections = removeSelfLoops(from.connections)
+	g.edges = removeSelfLoops(g.edges)
 
 	// delete to in the graph
 	g.RemoveNode(to.id)
@@ -186,6 +224,7 @@ func (g *graph) GetNode(id uint64) (*Vertex, bool) {
 	*/
 }
 
+// !! this is the issue, got it
 // ! ignoring duplicate edges in adjacency list for now
 // (i, j) then (j, i)
 // ! allow parallel edges

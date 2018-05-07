@@ -18,28 +18,42 @@ func TestNewGraph(t *testing.T) {
 	graph := NewGraph()
 
 	// insert nodes
-	graph.insertNodeAdjacency(1, []uint64{2, 3, 4, 5})
+	graph.insertNodeAdjacency(1, []uint64{2, 3, 4})
+	graph.insertNodeAdjacency(2, []uint64{1, 3})
+	graph.insertNodeAdjacency(3, []uint64{2, 1, 4})
+	graph.insertNodeAdjacency(4, []uint64{1, 3})
 
-	log.Printf("%v\n", graph)
-	edge := graph.GetEdges()[0]
-	log.Printf("contracting %v\n", edge)
-	graph.ContractEdge(edge)
-	log.Printf("%v\n", graph)
+	//log.Printf("%v\n", graph)
+	//edge := graph.GetEdges()[0]
+	//log.Printf("contracting %v\n", edge)
+	//graph.ContractEdge(edge)
+	//log.Printf("%v\n", graph)
 
+	log.Println("contracting entire graph...")
+	cuts := graph.ContractionAlgorithm()
+	log.Printf("Got %d cuts for graph:\n %v\n", cuts, graph)
 }
 
 // read an adjacency list into a graph
 func TestReadAdjacencyList(t *testing.T) {
 	t.Skip("skipping from file")
+	var min uint64 = 9999999999
+	num_trials := 1
 
-	_, err := graphFromFile()
-	if err != nil {
-		log.Fatal(err)
+	for i := 0; i < num_trials; i++ {
+		graph, err := graphFromFile()
+		if err != nil {
+			log.Fatal(err)
+		}
+		//log.Println("contracting entire graph...")
+		cuts := graph.ContractionAlgorithm()
+		//log.Printf("Got %d cuts for graph:\n %v\n", cuts, graph)
+		if cuts < min {
+			min = cuts
+		}
+
+		log.Printf("Found mincut of %d in %d trials\n%v", min, num_trials, graph.GetEdges())
 	}
-
-	//for _, node := range graph.GetNodes() {
-	//	log.Printf("%v\n", node)
-	//}
 
 }
 
