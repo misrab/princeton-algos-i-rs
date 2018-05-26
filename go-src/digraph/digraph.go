@@ -34,6 +34,8 @@ type DiGraph interface {
 
 	GetVertex(id uint64) (*Vertex, bool)
 
+	GetVertexIds() []uint64
+
 	Connected(from, to uint64) bool
 
 	Copy() DiGraph
@@ -81,7 +83,9 @@ func (d *digraph) String() string {
 	for _, e := range d.edges {
 		result += fmt.Sprintf("%v ", e)
 	}
-	result += "\n"
+	result += "\nvertices:\n"
+
+	result += fmt.Sprintf("%v\n", d.GetVertexIds())
 
 	return result
 }
@@ -89,6 +93,21 @@ func (d *digraph) String() string {
 /*
   public methods
 */
+
+func (d *digraph) GetVertexIds() []uint64 {
+	n := len(d.vertices)
+
+	ids := make([]uint64, n)
+
+	i := 0
+	for id, _ := range d.vertices {
+
+		ids[i] = id
+		i += 1
+	}
+
+	return ids
+}
 
 func (d *digraph) Connected(from, to uint64) bool {
 	from_vertex, from_found := d.GetVertex(from)
