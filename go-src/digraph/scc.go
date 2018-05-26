@@ -1,10 +1,12 @@
 package digraph
 
 import (
-//"fmt"
+	//"fmt"
+
+	"github.com/misrab/go-utils"
 )
 
-func TopologicallyOrder(graph DiGraph) map[uint64]uint64 {
+func TopologicallyOrder(graph DiGraph) (old_to_new map[uint64]uint64, new_to_old map[uint64]uint64) {
 
 	explored := make(map[uint64]bool)
 
@@ -15,7 +17,7 @@ func TopologicallyOrder(graph DiGraph) map[uint64]uint64 {
 		return nil
 	}
 
-	labels := make(map[uint64]uint64)
+	old_to_new := make(map[uint64]uint64)
 	current_label := uint64(n)
 	for _, id := range ids {
 		if explored[id] {
@@ -23,10 +25,12 @@ func TopologicallyOrder(graph DiGraph) map[uint64]uint64 {
 		}
 
 		vertex, _ := graph.GetVertex(id)
-		depthFirstSearch(graph, vertex, explored, labels, &current_label)
+		depthFirstSearch(graph, vertex, explored, old_to_new, &current_label)
 	}
 
-	return labels
+	new_to_old := utils.FlipMap(old_to_new)
+
+	return old_to_new, new_to_old
 }
 
 func depthFirstSearch(graph DiGraph, vertex *Vertex, explored map[uint64]bool, labels map[uint64]uint64, current_label *uint64) {

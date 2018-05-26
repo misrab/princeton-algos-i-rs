@@ -20,7 +20,7 @@ func TestTopolicallyOrder(t *testing.T) {
 	graph.AddEdge(4, 2)
 	graph.AddEdge(4, 3)
 
-	labels := TopologicallyOrder(graph)
+	labels, _ := TopologicallyOrder(graph)
 	//fmt.Printf("labels:\n%v", labels)
 
 	assert.True(t, labels[4] == 1)
