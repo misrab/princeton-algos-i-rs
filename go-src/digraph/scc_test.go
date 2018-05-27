@@ -8,10 +8,11 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestSCC(t *testing.T) {
-	graph := createMediumGraph()
-	FindSCCs(graph)
-}
+/*func TestSCC(t *testing.T) {
+	graph := createMediumGraph2()
+	sccs := FindSCCs(graph)
+
+}*/
 
 /* // can't expect a cyclic graph to have a topological ordering!
 func TestTopolicallyOrderMedium(t *testing.T) {
@@ -67,6 +68,28 @@ func createMediumGraph() DiGraph {
 
 	graph.AddEdge(3, 4)
 	graph.AddEdge(6, 7)
+
+	return graph
+}
+
+// create (7..,1,4) <- (6..,..9,3) <- (5,2,..8)
+func createMediumGraph2() DiGraph {
+	graph := NewDiGraph()
+
+	graph.AddEdge(5, 2)
+	graph.AddEdge(2, 8)
+	graph.AddEdge(8, 5)
+
+	graph.AddEdge(6, 9)
+	graph.AddEdge(9, 3)
+	graph.AddEdge(3, 6)
+
+	graph.AddEdge(7, 1)
+	graph.AddEdge(1, 4)
+	graph.AddEdge(4, 7)
+
+	graph.AddEdge(8, 6)
+	graph.AddEdge(9, 7)
 
 	return graph
 }

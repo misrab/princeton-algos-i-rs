@@ -66,8 +66,13 @@ func (d *digraph) Copy() DiGraph {
 }
 
 func (d *digraph) Reverse() DiGraph {
+	new_graph := NewDiGraph()
 
-	return d
+	for _, edge := range d.edges {
+		new_graph.AddEdge(edge.to.id, edge.from.id)
+	}
+
+	return new_graph
 }
 
 /*

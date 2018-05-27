@@ -3,15 +3,19 @@ package main
 import (
 	"bufio"
 	//"log"
+	"fmt"
 	"os"
+
 	"strconv"
 	"strings"
+
+	"sort"
 
 	"github.com/misrab/stanford-algos-rs/go-src/digraph"
 )
 
 const (
-	PATH = "../data/scc_small.txt"
+	PATH = "../data/scc.txt"
 )
 
 func main() {
@@ -38,6 +42,13 @@ func main() {
 
 }
 
+// template
+//func handleLine(c chan string, done chan struct{}) {
+//	close(done)
+//}
+
+// course 2 - programming assignment 1
+/*
 func handleLine(c chan string, done chan struct{}) {
 	graph := digraph.NewDiGraph()
 
@@ -53,9 +64,17 @@ func handleLine(c chan string, done chan struct{}) {
 	}
 
 	// we're going to find strongly connected components
-	reversed_graph := graph.Reverse()
-	labels_old_to_new, labels_new_to_old := digraph.TopologicallyOrder(reversed_graph)
+	sccs := digraph.FindSCCs(graph)
+	scc_lens := make([]int, 0)
+	for _, list := range sccs {
+		scc_lens = append(scc_lens, len(list))
+	}
+	// decreasing order
+	sort.Slice(scc_lens, func(i int, j int) bool { return scc_lens[i] > scc_lens[j] })
+
+	// for programming assignment
+	fmt.Printf("%v\n", scc_lens[:6])
 
 	println("done")
 	close(done)
-}
+}*/

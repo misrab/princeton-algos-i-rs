@@ -1,7 +1,7 @@
 package digraph
 
 import (
-	"fmt"
+	//"fmt"
 	"sort"
 
 	"github.com/misrab/go-utils"
@@ -26,10 +26,11 @@ func DFSSCC(graph DiGraph, vertex *Vertex, explored map[uint64]bool, labels map[
 	labels[vertex.id] = *finishing_time
 
 }
-func FindSCCs(graph DiGraph) {
-	fmt.Println("find sccs")
+func FindSCCs(graph DiGraph) map[uint64][]*Vertex {
+	//fmt.Println("find sccs")
 
 	reversed_graph := graph.Reverse()
+	//fmt.Printf("original: %v\nreverse: %v\n", graph, reversed_graph)
 
 	var finishing_time uint64 = 0
 	var leader *Vertex
@@ -47,29 +48,40 @@ func FindSCCs(graph DiGraph) {
 		if explored[ids[i]] {
 			continue
 		}
-		leader, _ = graph.GetVertex(ids[i])
+		leader, _ = reversed_graph.GetVertex(ids[i])
+		// care about labels, not leaders
 		DFSSCC(reversed_graph, leader, explored, labels, leaders, ids[i], &finishing_time)
 	}
 
+	//fmt.Printf("finishint times:\n%v", labels)
+
 	// run DFS-Loop on original graph
-
-	/*reversed_graph := graph.Reverse()
-	labels_old_to_new, _ := TopologicallyOrder(reversed_graph)
-	num_labels := len(labels_old_to_new)
-	new_labels_increasing := make([]uint64, num_labels)
-	i := 0
-	for _, new_label := range labels_old_to_new {
-		new_labels_increasing[i] = new_label
-		i += 1
+	// using reverse finishing times
+	explored = make(map[uint64]bool) // reinitialise
+	finishing_time_to_id := utils.FlipMapUint64(labels)
+	for i := len(labels); i > 0; i-- {
+		node_id := finishing_time_to_id[uint64(i)]
+		if explored[node_id] {
+			continue
+		}
+		// initiate dfs from that actual node
+		leader, _ := graph.GetVertex(node_id)
+		// care about leaders, not labels
+		DFSSCC(graph, leader, explored, labels, leaders, node_id, &finishing_time)
 	}
-	sort.Slice(new_labels_increasing, func(i, j int) bool { return new_labels_increasing[i] < new_labels_increasing[j] })
 
-	fmt.Printf("%v\n", labels_old_to_new)
+	// nodes with same leaders are the scc's
+	sccs := make(map[uint64][]*Vertex)
+	for node_id, leader := range leaders {
+		if sccs[leader] == nil {
+			sccs[leader] = make([]*Vertex, 0)
+		}
 
-	// now we go in reverse label order and find scc's
-	for i := num_labels - 1; i > 0; i-- {
-		continue
-	}*/
+		node, _ := graph.GetVertex(node_id)
+		sccs[leader] = append(sccs[leader], node)
+	}
+
+	return sccs
 }
 
 func TopologicallyOrder(graph DiGraph) (old_to_new map[uint64]uint64, new_to_old map[uint64]uint64) {
