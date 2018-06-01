@@ -17,8 +17,9 @@ type Vertex struct {
 }
 
 type Edge struct {
-	from *Vertex
-	to   *Vertex
+	from   *Vertex
+	to     *Vertex
+	weight uint64
 }
 
 type digraph struct {
@@ -27,7 +28,7 @@ type digraph struct {
 }
 
 type DiGraph interface {
-	AddEdge(from, to uint64) *Edge
+	AddEdge(from, to, weight uint64) *Edge
 	AddVertex(id uint64) *Vertex
 
 	RemoveEdge(e *Edge)
@@ -59,7 +60,7 @@ func (d *digraph) Copy() DiGraph {
 	new_graph := NewDiGraph()
 
 	for _, edge := range d.edges {
-		new_graph.AddEdge(edge.from.id, edge.to.id)
+		new_graph.AddEdge(edge.from.id, edge.to.id, edge.weight)
 	}
 
 	return new_graph
@@ -69,7 +70,7 @@ func (d *digraph) Reverse() DiGraph {
 	new_graph := NewDiGraph()
 
 	for _, edge := range d.edges {
-		new_graph.AddEdge(edge.to.id, edge.from.id)
+		new_graph.AddEdge(edge.to.id, edge.from.id, edge.weight)
 	}
 
 	return new_graph
@@ -80,7 +81,7 @@ func (d *digraph) Reverse() DiGraph {
 */
 
 func (e *Edge) String() string {
-	return fmt.Sprintf("(%d,%d)", e.from.id, e.to.id)
+	return fmt.Sprintf("(%d,%d,%d)", e.from.id, e.to.id, e.weight)
 }
 
 func (d *digraph) String() string {
@@ -151,7 +152,7 @@ func (d *digraph) AddVertex(id uint64) *Vertex {
 	return vertex
 }
 
-func (d *digraph) AddEdge(from, to uint64) *Edge {
+func (d *digraph) AddEdge(from, to, weight uint64) *Edge {
 	// ensure both vertices exist in graph
 	var from_vertex, to_vertex *Vertex
 	var ok bool
@@ -169,6 +170,7 @@ func (d *digraph) AddEdge(from, to uint64) *Edge {
 	edge := new(Edge)
 	edge.from = from_vertex
 	edge.to = to_vertex
+	edge.weight = weight
 
 	d.edges = append(d.edges, edge)
 	from_vertex.outgoing = append(from_vertex.outgoing, edge)

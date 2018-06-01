@@ -10,10 +10,10 @@ import (
 func TestCopy(t *testing.T) {
 	d := NewDiGraph()
 
-	d.AddEdge(1, 2)
-	d.AddEdge(1, 3)
-	d.AddEdge(2, 4)
-	d.AddEdge(3, 4)
+	d.AddEdge(1, 2, 1)
+	d.AddEdge(1, 3, 1)
+	d.AddEdge(2, 4, 1)
+	d.AddEdge(3, 4, 1)
 
 	new_graph := d.Copy()
 
@@ -35,7 +35,7 @@ func TestCopy(t *testing.T) {
 func TestBasic(t *testing.T) {
 	d := NewDiGraph()
 
-	edge := d.AddEdge(1, 2)
+	edge := d.AddEdge(1, 2, 1)
 
 	from, from_found := d.GetVertex(1)
 	to, to_found := d.GetVertex(2)

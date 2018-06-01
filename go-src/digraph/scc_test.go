@@ -35,10 +35,10 @@ func TestTopolicallyOrder(t *testing.T) {
 	// 1 <- 2 <- 4
 	//   <- 3 <- 4
 	// we will want (1,2,3,4) -> (4,3,2,1) or (4,2,3,1)
-	graph.AddEdge(2, 1)
-	graph.AddEdge(3, 1)
-	graph.AddEdge(4, 2)
-	graph.AddEdge(4, 3)
+	graph.AddEdge(2, 1, 1)
+	graph.AddEdge(3, 1, 1)
+	graph.AddEdge(4, 2, 1)
+	graph.AddEdge(4, 3, 1)
 
 	labels, _ := TopologicallyOrder(graph)
 	//fmt.Printf("labels:\n%v", labels)
@@ -54,20 +54,20 @@ func TestTopolicallyOrder(t *testing.T) {
 func createMediumGraph() DiGraph {
 	graph := NewDiGraph()
 
-	graph.AddEdge(1, 2)
-	graph.AddEdge(2, 3)
-	graph.AddEdge(3, 1)
+	graph.AddEdge(1, 2, 1)
+	graph.AddEdge(2, 3, 1)
+	graph.AddEdge(3, 1, 1)
 
-	graph.AddEdge(4, 5)
-	graph.AddEdge(5, 6)
-	graph.AddEdge(6, 4)
+	graph.AddEdge(4, 5, 1)
+	graph.AddEdge(5, 6, 1)
+	graph.AddEdge(6, 4, 1)
 
-	graph.AddEdge(7, 8)
-	graph.AddEdge(8, 9)
-	graph.AddEdge(9, 7)
+	graph.AddEdge(7, 8, 1)
+	graph.AddEdge(8, 9, 1)
+	graph.AddEdge(9, 7, 1)
 
-	graph.AddEdge(3, 4)
-	graph.AddEdge(6, 7)
+	graph.AddEdge(3, 4, 1)
+	graph.AddEdge(6, 7, 1)
 
 	return graph
 }
@@ -76,20 +76,20 @@ func createMediumGraph() DiGraph {
 func createMediumGraph2() DiGraph {
 	graph := NewDiGraph()
 
-	graph.AddEdge(5, 2)
-	graph.AddEdge(2, 8)
-	graph.AddEdge(8, 5)
+	graph.AddEdge(5, 2, 1)
+	graph.AddEdge(2, 8, 1)
+	graph.AddEdge(8, 5, 1)
 
-	graph.AddEdge(6, 9)
-	graph.AddEdge(9, 3)
-	graph.AddEdge(3, 6)
+	graph.AddEdge(6, 9, 1)
+	graph.AddEdge(9, 3, 1)
+	graph.AddEdge(3, 6, 1)
 
-	graph.AddEdge(7, 1)
-	graph.AddEdge(1, 4)
-	graph.AddEdge(4, 7)
+	graph.AddEdge(7, 1, 1)
+	graph.AddEdge(1, 4, 1)
+	graph.AddEdge(4, 7, 1)
 
-	graph.AddEdge(8, 6)
-	graph.AddEdge(9, 7)
+	graph.AddEdge(8, 6, 1)
+	graph.AddEdge(9, 7, 1)
 
 	return graph
 }
