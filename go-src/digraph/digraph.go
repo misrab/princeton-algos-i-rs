@@ -16,6 +16,10 @@ type Vertex struct {
 	outgoing []*Edge
 }
 
+func (v *Vertex) Edges() []*Edge {
+	return append(v.outgoing, v.incoming...)
+}
+
 type Edge struct {
 	from   *Vertex
 	to     *Vertex
@@ -37,7 +41,7 @@ type DiGraph interface {
 
 	GetVertexIds() []uint64
 
-	Connected(from, to uint64) bool
+	Connected(from, to uint64) (*Edge, bool)
 
 	Copy() DiGraph
 	Reverse() DiGraph
@@ -115,19 +119,19 @@ func (d *digraph) GetVertexIds() []uint64 {
 	return ids
 }
 
-func (d *digraph) Connected(from, to uint64) bool {
+func (d *digraph) Connected(from, to uint64) (*Edge, bool) {
 	from_vertex, from_found := d.GetVertex(from)
 	if !from_found {
-		return false
+		return nil, false
 	}
 
 	for _, edge := range from_vertex.outgoing {
 		if edge.to.id == to {
-			return true
+			return edge, true
 		}
 	}
 
-	return false
+	return nil, false
 }
 
 func (d *digraph) GetVertex(id uint64) (*Vertex, bool) {
