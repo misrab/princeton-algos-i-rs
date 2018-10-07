@@ -10,12 +10,13 @@ import (
 	"strings"
 	//"sort"
 	//"github.com/misrab/stanford-algos-rs/go-src/medianheap"
+	"github.com/misrab/stanford-algos-rs/go-src/mincut"
 
 	//"github.com/bradfitz/slice"
 )
 
 const (
-	PATH = "./data/course3week1pa1/jobs.txt"
+	PATH = "../data/course3week1pa1/edges.txt"
 )
 
 func main() {
@@ -48,6 +49,10 @@ func str_to_uint64(s string) uint64 {
 	as_int, _ := strconv.Atoi(s)
 	return uint64(as_int)
 }
+func str_to_int64(s string) int64 {
+	as_int, _ := strconv.Atoi(s)
+	return int64(as_int)
+}
 
 // template
 //func handleLine(c chan string, done chan struct{}) {
@@ -57,17 +62,28 @@ func str_to_uint64(s string) uint64 {
 
 // course 3 = pa 1.3
 func handleLine(c chan string, done chan struct{}) {
-	firstLineRead := false
+	g := graph.NewGraph()
 
+	firstLineRead := false
 	for line := range c {
 		if firstLineRead == false {
+			// fmt.Printf("%v\n", line)
 			firstLineRead = true
 			continue
 		}
 
 		values := strings.Split(line, " ")
-		println(values)
+		from := str_to_uint64(values[0])
+		to := str_to_uint64(values[1])
+		weight := str_to_int64(values[2])
+
+		g.AddEdge(from, to, weight)
+		// fmt.Printf("%v\n", values)
 	}
+
+	fmt.Printf("%v\n", g)
+
+	close(done)
 }
 
 

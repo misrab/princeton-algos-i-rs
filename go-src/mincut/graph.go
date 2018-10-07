@@ -19,6 +19,7 @@ func (v Vertex) String() string {
 type Edge struct {
 	from *Vertex
 	to   *Vertex
+	weight int64
 }
 
 func (e *Edge) String() string {
@@ -58,10 +59,13 @@ type Graph interface {
 	//GetNodeAdjacency(id uint64) []*Edge
 
 	GetNode(uint64) (*Vertex, bool)
+	RemoveNode(id uint64)
+
+	AddEdge(v1, v2 uint64, weight int64)
 
 	ContractEdge(e *Edge)
 
-	RemoveNode(id uint64)
+
 
 	ContractionAlgorithm() uint64
 }
@@ -75,6 +79,33 @@ func NewGraph() Graph {
 
 	return graph
 }
+
+func (g *graph) AddEdge(v1id, v2id uint64, weight int64) {
+	v1, v1found := g.GetNode(v1id)
+	v2, v2found := g.GetNode(v2id)
+
+	if !v1found {
+		v1 = new(Vertex)
+		v1.id = v1id
+	}
+	if !v2found {
+		v2 = new(Vertex)
+		v2.id = v2id
+	}
+
+	edge := new(Edge)
+	edge.from = v1
+	edge.to = v2
+	edge.weight = weight
+
+	v1.connections = append(v1.connections, edge)
+	v2.connections = append(v2.connections, edge)
+	g.edges = append(g.edges, edge)
+
+	g.vertices[v1id] = v1
+	g.vertices[v2id] = v2
+}
+
 
 func (g *graph) NumNodes() uint64 {
 	return uint64(len(g.vertices))
@@ -256,6 +287,7 @@ func (g *graph) insertNodeAdjacency(id uint64, connections []uint64) {
 		new_edge := new(Edge)
 		new_edge.from = node
 		new_edge.to = new_vertex
+		new_edge.weight = 1
 
 		//fmt.Printf("adding edge %v to connections of %v: %v\n", new_edge, id, node.connections)
 
