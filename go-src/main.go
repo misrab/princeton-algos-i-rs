@@ -7,13 +7,15 @@ import (
 	"os"
 
 	"strconv"
-	//"strings"
+	"strings"
 	//"sort"
-	"github.com/misrab/stanford-algos-rs/go-src/medianheap"
+	//"github.com/misrab/stanford-algos-rs/go-src/medianheap"
+
+	//"github.com/bradfitz/slice"
 )
 
 const (
-	PATH = "../data/median.txt"
+	PATH = "./data/course3week1pa1/jobs.txt"
 )
 
 func main() {
@@ -52,8 +54,117 @@ func str_to_uint64(s string) uint64 {
 //	close(done)
 //}
 
-// course 2 - pa 3 (heaps)
+
+// course 3 = pa 1.3
 func handleLine(c chan string, done chan struct{}) {
+	firstLineRead := false
+
+	for line := range c {
+		if firstLineRead == false {
+			firstLineRead = true
+			continue
+		}
+
+		values := strings.Split(line, " ")
+		println(values)
+	}
+}
+
+
+
+// course 3 - pa 1.1, 1.2
+// 1.1 - 25725549
+// 1.2 - 5549
+// func handleLine(c chan string, done chan struct{}) {
+// 	firstLineRead := false
+//
+// 	var jobs []job
+// 	for line := range c {
+// 		if firstLineRead == false {
+// 			firstLineRead = true
+// 			continue
+// 		}
+//
+// 		values := strings.Split(line, " ")
+//
+// 		// fmt.Printf("Values: %v\n", values)
+// 		var j job
+// 		j.w = str_to_uint64(values[0])
+// 		j.l = str_to_uint64(values[1])
+// 		j.score = score(j)
+//
+//
+// 		jobs = append(jobs, j)
+//
+// 	}
+//
+// 	// arbitrary sort
+// 	slice.Sort(jobs, func(i, j int) bool {
+// 		score_i := jobs[i].score
+// 		score_j := jobs[j].score
+// 		if score_i == score_j { return jobs[i].w > jobs[j].w }
+//     return  score_i > score_j
+// 	})
+//
+//
+// 	fmt.Printf("Jobs: %+v, completion: %v\n", jobs, weightedCompletion(jobs))
+//
+//
+// 	close(done)
+// }
+// func weightedCompletion(jobs []job) uint64 {
+// 	var result uint64
+//
+// 	for _, j := range jobs {
+// 		result = result + j.w * j.l
+// 	}
+//
+// 	return result
+// }
+// func score (j job) float64 {
+// 	return float64(float64(j.w) / float64(j.l))
+// }
+// type job struct {
+// 	w uint64
+// 	l uint64
+// 	score float64
+// }
+
+// course 2 - pa 4 (2sum)
+// func handleLine(c chan string, done chan struct{}) {
+// 	found := make(map[int]bool)
+//
+// 	for line := range c {
+// 		//println(line)
+// 		as_int, _ := strconv.Atoi(line)
+// 		found[as_int] = true
+// 	}
+//
+// 	count := 0
+// 	for t := -10000; t < 10001; t++ {
+// 		if t%10 == 0 {
+// 			fmt.Printf("trying t = %d\n", t)
+// 		}
+//
+// 		for x, _ := range found {
+// 			diff := t - x
+// 			if diff == x {
+// 				continue
+// 			}
+// 			//fmt.Printf("checking for t-x, x = %d\n", x)
+// 			if found[t-x] {
+// 				count++
+// 			}
+// 		}
+// 	}
+//
+// 	fmt.Printf("total target values found: %d\n", count)
+//
+// 	close(done)
+// }
+
+// course 2 - pa 3 (heaps)
+/*func handleLine(c chan string, done chan struct{}) {
 	mh := medianheap.NewMedianHeap()
 
 	var median uint64
@@ -76,6 +187,7 @@ func handleLine(c chan string, done chan struct{}) {
 
 	close(done)
 }
+*/
 
 // course 2 - pa 2 (dijkstra)
 /*func handleLine(c chan string, done chan struct{}) {
