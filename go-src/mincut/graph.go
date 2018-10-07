@@ -19,11 +19,11 @@ func (v Vertex) String() string {
 type Edge struct {
 	from *Vertex
 	to   *Vertex
-	weight int64
+	Weight int64
 }
 
 func (e *Edge) String() string {
-	return fmt.Sprintf("(%v,%v)", e.from.id, e.to.id)
+	return fmt.Sprintf("(%v,%v,%v)", e.from.id, e.to.id, e.Weight)
 }
 
 func (g *graph) String() string {
@@ -61,12 +61,12 @@ type Graph interface {
 	GetNode(uint64) (*Vertex, bool)
 	RemoveNode(id uint64)
 
-	AddEdge(v1, v2 uint64, weight int64)
+	AddEdge(v1, v2 uint64, Weight int64)
 
 	ContractEdge(e *Edge)
 
 
-
+	FindMST() []*Edge
 	ContractionAlgorithm() uint64
 }
 
@@ -80,7 +80,62 @@ func NewGraph() Graph {
 	return graph
 }
 
-func (g *graph) AddEdge(v1id, v2id uint64, weight int64) {
+
+
+func (g *graph) FindMST() []*Edge {
+	var mst []*Edge
+
+	// choose random start vertex
+	rand.Seed(1)
+	num_vertices := len(g.vertices)
+	start := g.vertices[uint64(rand.Intn(num_vertices))]
+	num_vertices_found := 0
+
+	explored := make(map[uint64]*Vertex)
+	explored[start.id] = start
+
+	var e *Edge
+	for num_vertices_found < num_vertices {
+		e = chooseNextMSTEdge(explored)
+		if e != nil { mst = append(mst, e) }
+
+		// return nil
+
+
+		num_vertices_found++
+	}
+
+
+	return mst
+}
+
+func chooseNextMSTEdge(explored map[uint64]*Vertex) *Edge {
+	var result *Edge
+
+	for _, vertex := range explored {
+		for _, edge := range vertex.connections {
+			if explored[edge.from.id] == nil || explored[edge.to.id] == nil {
+				// fmt.Printf("Looking at %v\n", edge)
+
+				if result == nil || edge.Weight < result.Weight {
+					result = edge
+				}
+			}
+		}
+	}
+
+	if result == nil { return nil }
+
+	explored[result.from.id] = result.from
+	explored[result.to.id] = result.to
+
+	// fmt.Printf("Chose %v\n", result)
+
+	return result
+}
+
+
+func (g *graph) AddEdge(v1id, v2id uint64, Weight int64) {
 	v1, v1found := g.GetNode(v1id)
 	v2, v2found := g.GetNode(v2id)
 
@@ -96,7 +151,7 @@ func (g *graph) AddEdge(v1id, v2id uint64, weight int64) {
 	edge := new(Edge)
 	edge.from = v1
 	edge.to = v2
-	edge.weight = weight
+	edge.Weight = Weight
 
 	v1.connections = append(v1.connections, edge)
 	v2.connections = append(v2.connections, edge)
@@ -287,7 +342,7 @@ func (g *graph) insertNodeAdjacency(id uint64, connections []uint64) {
 		new_edge := new(Edge)
 		new_edge.from = node
 		new_edge.to = new_vertex
-		new_edge.weight = 1
+		new_edge.Weight = 1
 
 		//fmt.Printf("adding edge %v to connections of %v: %v\n", new_edge, id, node.connections)
 

@@ -61,36 +61,43 @@ func str_to_int64(s string) int64 {
 
 
 // course 3 = pa 1.3
-func handleLine(c chan string, done chan struct{}) {
-	g := graph.NewGraph()
-
-	firstLineRead := false
-	for line := range c {
-		if firstLineRead == false {
-			// fmt.Printf("%v\n", line)
-			firstLineRead = true
-			continue
-		}
-
-		values := strings.Split(line, " ")
-		from := str_to_uint64(values[0])
-		to := str_to_uint64(values[1])
-		weight := str_to_int64(values[2])
-
-		g.AddEdge(from, to, weight)
-		// fmt.Printf("%v\n", values)
-	}
-
-	fmt.Printf("%v\n", g)
-
-	close(done)
-}
+// answer -3612829
+// func handleLine(c chan string, done chan struct{}) {
+// 	g := graph.NewGraph()
+//
+// 	firstLineRead := false
+// 	for line := range c {
+// 		if firstLineRead == false {
+// 			// fmt.Printf("%v\n", line)
+// 			firstLineRead = true
+// 			continue
+// 		}
+//
+// 		values := strings.Split(line, " ")
+// 		from := str_to_uint64(values[0])
+// 		to := str_to_uint64(values[1])
+// 		weight := str_to_int64(values[2])
+//
+// 		g.AddEdge(from, to, weight)
+// 		// fmt.Printf("%v\n", values)
+// 	}
+//
+// 	// fmt.Printf("%v\n", g)
+// 	mst := g.FindMST()
+// 	var cost int64 = 0
+// 	for _, e := range mst {
+// 		cost = cost + e.Weight
+// 	}
+// 	fmt.Printf("MST cost %d\n", cost)
+//
+// 	close(done)
+// }
 
 
 
 // course 3 - pa 1.1, 1.2
-// 1.1 - 25725549
-// 1.2 - 5549
+// 1.1 - answer 25725549
+// 1.2 - answer 5549
 // func handleLine(c chan string, done chan struct{}) {
 // 	firstLineRead := false
 //

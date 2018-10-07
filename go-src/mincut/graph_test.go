@@ -18,9 +18,14 @@ const (
 func TestNewGraphFromEdgeList(t *testing.T) {
 	g := NewGraph()
 
-	g.AddEdge(1, 2, 3)
+	g.AddEdge(1, 2, 1)
+	g.AddEdge(2, 3, 2)
+	g.AddEdge(1, 3, 3)
+	g.AddEdge(1, 4, 4)
+	g.AddEdge(4, 3, 5)
 
-	log.Printf("%+v\n", g)
+	mst := g.FindMST()
+	log.Printf("%+v\n", mst)
 }
 
 
